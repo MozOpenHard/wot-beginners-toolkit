@@ -29,8 +29,13 @@ MultiColorLED.prototype = {
     var g = parseInt(match[2]);
     var b = parseInt(match[3]);
     var pins = this.config["pwm-pins"];
-    this.device.pwm(pins[0], r)
-    .then(this.device.pwm(pins[1], g))
-    .then(this.device.pwm(pins[2], b));
+    var self = this;
+    self.device.pwm(pins[0], r)
+    .then(function(){
+      self.device.pwm(pins[1], g)
+      .then(function(){
+        self.device.pwm(pins[2], b);
+      });
+    }); 
   }
 }
