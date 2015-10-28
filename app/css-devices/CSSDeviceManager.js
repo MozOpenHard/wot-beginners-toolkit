@@ -2,15 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 var CSSDeviceManager = {
+  device_number: 0,
   device_map:{},
   style_observer_config: {attributes: true},
   start: function() {
     var self = this;
     self.style_observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
-        if (mutation.attributeName == "style") {
+        if (mutation.attributeName == "style" || mutation.attributeName == "class") {
           var cssDeviceElement = mutation.target;
-          var cssDevice = self.device_map[cssDeviceElement];
+          deviceNumber = cssDeviceElement.dataset.deviceNumber;
+          var cssDevice = self.device_map[deviceNumber];
           self.update(cssDevice, cssDeviceElement);
         }
       });
@@ -42,38 +44,43 @@ var CSSDeviceManager = {
       "{" +
       configString.replace(/\s/g, "")
       .replace(/([,:])?([^,;:]*)([,;])/g, "$1\"$2\"$3")
-      .replace(/\"(\d+)\"/g, "$1")
+      .replace(/\"(-?[.\d]+)\"/g, "$1")
       .replace(/:(([^,:]+,)+[^;]+);/g, ":[$1];")
       .replace(/;$/g, "")
       .replace(/;/g, ",")
       .replace(/(([-]|\w)+):/g, "\"$1\":") //attribute
       + "}";
-    console.log(configAsJSONString);
     var config = JSON.parse(configAsJSONString);
-    console.log(config);
     var self = this;
     var portType = config["port-type"];
     var portNumber = config["port-number"];
     PortManager.getPort(portType, portNumber).then(
       function(port) {
-        var promise = null;
+        var manager = null;
         switch (config.type) {
           case "multi-color-led": {
-            promise = MultiColorLEDManager.createMultiColorLED(config, port);
+            manager = MultiColorLEDManager;
+            break;
+          }
+          case "servo": {
+            manager = ServoManager;
             break;
           }
         }
-        promise.then(
-          function(cssDevice) {
-            console.log(cssDevice);
-            self.update(cssDevice, cssDeviceElement);
-            self.device_map[cssDeviceElement] = cssDevice;
-            self.style_observer.observe(cssDeviceElement, self.style_observer_config);
-          },
-          function(error) {
-            throw new Error(error);
-          }
-        );
+        if (manager) {
+          manager.createCSSDevice(config, port).then(
+            function(cssDevice) {
+              self.update(cssDevice, cssDeviceElement);
+              var deviceNumber = self.device_number++;
+              cssDeviceElement.dataset.deviceNumber = deviceNumber;
+              self.device_map[deviceNumber] = cssDevice;
+              self.style_observer.observe(cssDeviceElement, self.style_observer_config);
+            },
+            function(error) {
+              throw new Error(error);
+            }
+          );
+        }
       },
       function(error) {
         console.error(error);

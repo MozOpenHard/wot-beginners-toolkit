@@ -5,18 +5,29 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
     <title>WoT Beginners Toolkit</title>
     <style>
-      body {
-        border: 1px solid black;
+      #body {
+        padding: 10em;
+      }
+      #led {
+        color: red;
+      }
+      #servo {
+        /* 0 to 180 */
+        transform: rotate(90deg);
+        display: inline-block;
       }
     </style>
+    <script src="css-devices/devices/i2c.js" defer></script>
+    <script src="css-devices/devices/PortManager.js" defer></script>
     <script src="css-devices/devices/Utility.js" defer></script>
     <script src="css-devices/devices/PCA9685.js" defer></script>
-    <script src="css-devices/PortManager.js" defer></script>
     <script src="css-devices/CSSDeviceManager.js" defer></script>
     <script src="css-devices/MultiColorLED.js" defer></script>
+    <script src="css-devices/Servo.js" defer></script>
     <script src="app.js" defer></script>
   </head>
   <body>
-    <div id="led" data-css-device="type:multi-color-led; port-type:i2c; port-number:0; address:0x40; pwm-pins:0,1,2;">led label</div>
+    <div id="led" data-css-device="type:multi-color-led; port-type:i2c; port-number:0; address:0x40; pwm-pin:0,1,2; min-pulse:0; max-pulse:0.006;">LED</div>
+    <div id="servo" data-css-device="type:servo; port-type:i2c; port-number:0; address:0x40; pwm-pin:3; min-pulse:0.0005; max-pulse:0.0024; angle-range:180;">SERVO</div>
   </body>
 </html>

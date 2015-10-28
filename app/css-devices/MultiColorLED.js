@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 var MultiColorLEDManager = {
-  createMultiColorLED: function(config, port) {
+  createCSSDevice: function(config, port) {
     return new Promise(function(resolve, reject) {
       PCA9685Manager.getPCA9685(port, config.address).then(
         function(device) {
@@ -28,7 +28,13 @@ MultiColorLED.prototype = {
     var r = parseInt(match[1]);
     var g = parseInt(match[2]);
     var b = parseInt(match[3]);
-    var pins = this.config["pwm-pins"];
+    var pins = this.config["pwm-pin"];
+    var minPulse = this.config["min-pulse"];
+    var maxPulse = this.config["max-pulse"];
+    var pulseRange = maxPulse - minPulse;
+    r = minPulse + r / 255 * pulseRange;
+    g = minPulse + g / 255 * pulseRange;
+    b = minPulse + b / 255 * pulseRange;
     var self = this;
     self.device.pwm(pins[0], r)
     .then(function(){
@@ -36,6 +42,6 @@ MultiColorLED.prototype = {
       .then(function(){
         self.device.pwm(pins[2], b);
       });
-    }); 
+    });
   }
 }

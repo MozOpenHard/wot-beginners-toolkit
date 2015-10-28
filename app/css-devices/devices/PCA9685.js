@@ -32,7 +32,6 @@ var PCA9685Manager = {
         yield Utility.sleep(10, thread);
         port.write8(0x07, 0x00);
         yield Utility.sleep(300, thread);
-
         var device = new PCA9685(port, address);
         self.device_map[port][address] = device;
         resolve(device);
@@ -48,41 +47,23 @@ var PCA9685 = function(port, address) {
 }
 
 PCA9685.prototype = {
-  pwm:function(pin, angle) {
-    //console.log("pwm:"+pin+","+angle);
+  tick_sec: 1 / 61 / 4096,
+  pwm:function(pin, pulse) {
     var self = this;
     var port = this.port;
     var address = this.address;
-
     var portStart = 8;
     var portInterval = 4;
-
-    var center = 0.001500; // sec ( 1500 micro sec)
-    var range  = 0.000600; // sec ( 600 micro sec) a bit large?
-    var angleRange = 255.0;//50
-
-    if ( angle > angleRange){
-      angle = angleRange;
-    } else if ( angle < -angleRange ){
-      angle = - angleRange;
-    }
-
-    var freq = 1600; // Hz 61(old)
-    var tickSec = ( 1 / freq ) / 4096; // 1bit resolution( sec )4096
-    var centerTick = center / tickSec;
-    var rangeTick = range / tickSec;
-    var gain = rangeTick / angleRange; // [tick / angle]
-    var ticks = Math.round(centerTick + gain * angle);
-    var tickH = (( ticks >> 8 ) & 0x0f);
+    var ticks = Math.round(pulse / this.tick_sec);
+    var tickH = ((ticks >> 8) & 0x0f);
     var tickL = (ticks & 0xff);
-    address = pin;
     return new Promise(function(resolve, reject) {
       var thread = (function*() {
         port.setDeviceAddress(address);
-        var value =  Math.round(portStart + pin * portInterval);
-        port.write8(value + 1, tickH);
+        var pwmPort =  Math.round(portStart + pin * portInterval);
+        port.write8(pwmPort + 1, tickH);
         yield Utility.sleep(1, thread);
-        port.write8(value, tickL);
+        port.write8(pwmPort, tickL);
         resolve();
       })();
       thread.next();

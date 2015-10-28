@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 var PortManager = {
-  port_map:{},
+  port_map: {},
   getPort: function(portType, portNumber) {
     var self = this;
     return new Promise(function(resolve, reject) {
@@ -11,18 +11,13 @@ var PortManager = {
       if (port) {
         resolve(port);
       } else {
-        var dammyPort = {
-          port_type: portType,
-          port_number: portNumber,
-          write8: function(v1, v2) {
-            console.log(portType+portNumber+".write8("+v1+","+v2+")");
-          },
-          setDeviceAddress: function(address) {
-            console.log(portType+portNumber+".setDeviceAddress("+address+")");
+        navigator.requestI2CAccess().then(
+          function(i2c) {
+            var port = i2c.open(portNumber);
+            self.port_map[portName] = port;
+            resolve(port);
           }
-        };
-        self.port_map[portName] = dammyPort;
-        resolve(dammyPort);
+        );
       }
     });
   }
