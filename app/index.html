@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
     <title>WoT Beginners Toolkit</title>
     <style>
-      #body {
-        padding: 10em;
+      body {
+        padding: 1em;
+        font-size: 200px;
       }
       #led {
         color: red;
       }
       #servo {
         /* 0 to 180 */
-        transform: rotate(90deg);
+        transform: rotate(180deg);
         display: inline-block;
       }
     </style>
@@ -29,5 +30,5 @@
   <body>
     <div id="led" data-css-device="type:multi-color-led; port-type:i2c; port-number:0; address:0x40; pwm-pin:0,1,2; min-pulse:0; max-pulse:0.006;">LED</div>
     <div id="servo" data-css-device="type:servo; port-type:i2c; port-number:0; address:0x40; pwm-pin:3; min-pulse:0.0005; max-pulse:0.0024; angle-range:180;">SERVO</div>
-  </body>
+</body>
 </html>
