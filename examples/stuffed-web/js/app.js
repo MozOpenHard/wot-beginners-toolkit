@@ -70,12 +70,16 @@ var Main = {
   },
   startActuation: function(json) {
     var latestTweet = json.statuses[0];
+    console.log(latestTweet);
     var content = latestTweet.text.replace(/\s#stuffed_web/g, "");
+    document.getElementById("current-tweet").style.backgroundImage = "url(" + latestTweet.user.profile_background_image_url + ")";
+    document.getElementById("current-tweet-user-icon").src = latestTweet.user.profile_image_url;
+    document.getElementById("current-tweet-user-name").textContent = latestTweet.user.name;
+    document.getElementById("current-tweet-content").textContent = latestTweet.text;
     var words = content.split(" ");
     var promise = Main.createEmptyPromise();
     words.forEach(function(word) {
       promise = promise.then(function() {
-        console.log(word);
         if (word.length === 0) {
           return Main.wait(1000);
         } else if (word == ":)") {
