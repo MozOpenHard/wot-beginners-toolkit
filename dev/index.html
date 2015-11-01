@@ -12,9 +12,9 @@
       #led {
         color: red;
       }
-      .servo {
+      #servo {
         /* 0 to 180 */
-        transform: rotate(180deg);
+        transform: rotate(90deg);
         display: inline-block;
       }
     </style>
@@ -29,6 +29,6 @@
   </head>
   <body>
     <div id="led" data-css-device="type:multi-color-led; port-type:i2c; port-number:0; address:0x40; pwm-pin:0,1,2; min-pulse:0; max-pulse:0.006;">LED</div>
-    <div class="servo" data-css-device="type:servo; port-type:i2c; port-number:0; address:0x40; pwm-pin:3; min-pulse:0.0005; max-pulse:0.0024; angle-range:180;">SERVO</div>
+    <div id="servo" data-css-device="type:servo; port-type:i2c; port-number:0; address:0x40; pwm-pin:3; min-pulse:0.0005; max-pulse:0.0024; angle-range:180;">SERVO</div>
 </body>
 </html>
