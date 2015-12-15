@@ -52,7 +52,7 @@ var Main = {
           Main.startActuation(xhr.response).then(
             function() {
               Main.log("END ANIMATION");
-              setTimeout(Main.update, 15*1000);
+              setTimeout(Main.update, 5000);
             },
             function(e) {
               console.error(e);
@@ -70,7 +70,6 @@ var Main = {
   },
   startActuation: function(json) {
     var latestTweet = json.statuses[0];
-    console.log(latestTweet);
     var content = latestTweet.text.replace(/\s#stuffed_web/g, "");
     document.getElementById("current-tweet").style.backgroundImage = "url(" + latestTweet.user.profile_background_image_url + ")";
     document.getElementById("current-tweet-user-icon").src = latestTweet.user.profile_image_url;
@@ -91,7 +90,7 @@ var Main = {
         } else if (word == "&gt;:)") {
           return Main.angry();
         } else {
-          return Main.wait(1000 * word.length);
+          return Main.wait(10 * word.length);
         }
       });
     });

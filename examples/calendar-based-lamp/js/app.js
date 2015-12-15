@@ -62,10 +62,13 @@ var Main = {
 
   getData: function(id) {
     return new Promise(function(resolve, reject) {
-      var url = "http://www.google.com/calendar/feeds/" + id + "/public/basic?alt=json&orderby=starttime&max-results=15&singleevents=true&sortorder=ascending&futureevents=true";
+      var time = (new Date()).getTime();
+      var url = "http://www.google.com/calendar/feeds/" + id + "/public/basic?alt=json&orderby=starttime&max-results=15&singleevents=true&sortorder=ascending&futureevents=true&nocash="+time;
       var xhr = new XMLHttpRequest({mozSystem: true});
       xhr.open("GET", url, true);
+      console.log(url);
       xhr.onload = function (e) {
+        console.log(xhr.responseText);
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             resolve(JSON.parse(xhr.responseText));

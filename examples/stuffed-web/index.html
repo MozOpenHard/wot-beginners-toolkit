@@ -5,23 +5,30 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
     <title>Stuffed Web - WoT Beginners Toolkit Sample</title>
     <style>
+      body {
+        padding-left: 50px;
+      }
       #control {
-        padding: 5em;
-        font-size: 50px;
+        padding: 2em;
+        font-size: 80px;
       }
       .servo {
-        transform: rotate(90deg);
+        transform: rotate(0deg);
       }
       button {
         font-size: 50px;
       }
+      #current-tweet-user-icon {
+        width: 100px;
+        height: 100px;
+        
+      }
+      #current-tweet-user-name {
+        display: inline-block;
+      }
       #current-tweet {
-        font-size: 50px;
-        position: abolute;
-        left: 0px;
-        top: 0px;
-        bottom: 0px;
-        right: 0px;
+        font-size: 80px;
+        padding-left: 10px;
         background-repeat: repeat;
       }
     </style>
@@ -33,9 +40,9 @@
   </head>
   <body>
     <div id="current-tweet">
-      <img id="current-tweet-user-icon" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_3_bigger.png" />
-      <div id="current-tweet-user-name">wottools</div>
-      <div id="current-tweet-content">:) :( :) #stuffed_web</div>
+      <img id="current-tweet-user-icon"/>
+      <div id="current-tweet-user-name"></div>
+      <div id="current-tweet-content"></div>
     </div>
     <div id="control">
       <div id="right-hand" class="servo" data-css-device="type:servo; port-type:i2c; port-number:0; address:0x40; pwm-pin:0; min-pulse:0.0005; max-pulse:0.0024; angle-range:180;">RIGHT Hand</div>

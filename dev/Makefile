@@ -24,3 +24,7 @@ $(dev): $(files)
 	cat > $@ $^
 
 lib: $(min)
+
+copy:
+	cp $(dev) ./examples/calendar-based-lamp/js/
+	cp $(dev) ./examples/stuffed-web/js/

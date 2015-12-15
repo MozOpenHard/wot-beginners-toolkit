@@ -1,34 +1,47 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
     <title>WoT Beginners Toolkit</title>
-    <style>
-      body {
-        padding: 1em;
-        font-size: 200px;
-      }
-      #led {
-        color: red;
-      }
-      #servo {
-        /* 0 to 180 */
-        transform: rotate(90deg);
-        display: inline-block;
-      }
-    </style>
     <script src="css-devices/devices/i2c.js" defer></script>
     <script src="css-devices/devices/PortManager.js" defer></script>
     <script src="css-devices/devices/Utility.js" defer></script>
     <script src="css-devices/devices/PCA9685.js" defer></script>
+    <script src="css-devices/devices/MCP3425.js" defer></script>
     <script src="css-devices/CSSDeviceManager.js" defer></script>
     <script src="css-devices/MultiColorLED.js" defer></script>
     <script src="css-devices/Servo.js" defer></script>
+    <script src="css-devices/ADC.js" defer></script>
     <script src="app.js" defer></script>
+    <style>
+      body {
+        padding-top: 0.3em;
+        padding-left: 1.8em;
+        font-size: 300px;
+      }
+      #led {
+        color: blue;
+      }
+      #servo {
+        transform: rotate(90deg); /* 0 to 180 */
+        display: inline-block;
+      }
+      #slider {
+        width: 500px;
+        position: absolute;
+        top: 100px;
+        left: 650px;
+      }
+    </style>
   </head>
   <body>
+    <!--
+    <input id="slider" type="range" min="0" max="180">
+    -->
+    <!--
     <div id="led" data-css-device="type:multi-color-led; port-type:i2c; port-number:0; address:0x40; pwm-pin:0,1,2; min-pulse:0; max-pulse:0.006;">LED</div>
-    <div id="servo" data-css-device="type:servo; port-type:i2c; port-number:0; address:0x40; pwm-pin:3; min-pulse:0.0005; max-pulse:0.0024; angle-range:180;">SERVO</div>
-</body>
+    <div id="servo" data-css-device="type:servo; port-type:i2c; port-number:0; address:0x40; pwm-pin:3; min-pulse:0.0005; max-pulse:0.0024; angle-range:180;">SERVO<BR><span id="angl"></span></div>
+    -->
+    ADC: <input id="adc" data-css-device="type:adc; port-type:i2c; port-number:0; address:0x68;"></input>
+  </body>
 </html>

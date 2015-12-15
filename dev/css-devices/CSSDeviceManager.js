@@ -1,6 +1,3 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
 var CSSDeviceManager = {
   device_number: 0,
   device_map:{},
@@ -66,15 +63,24 @@ var CSSDeviceManager = {
             manager = ServoManager;
             break;
           }
+          case "adc": {
+            manager = ADCManager;
+            break;
+          }
         }
         if (manager) {
           manager.createCSSDevice(config, port).then(
             function(cssDevice) {
-              self.update(cssDevice, cssDeviceElement);
               var deviceNumber = self.device_number++;
               cssDeviceElement.dataset.deviceNumber = deviceNumber;
-              self.device_map[deviceNumber] = cssDevice;
-              self.style_observer.observe(cssDeviceElement, self.style_observer_config);
+              cssDevice.deviceNumber = deviceNumber;
+              if (cssDevice.isSensor) {
+                cssDevice.setListener(self.listen);
+              } else {
+                self.update(cssDevice, cssDeviceElement);
+                self.device_map[deviceNumber] = cssDevice;
+                self.style_observer.observe(cssDeviceElement, self.style_observer_config);
+              }
             },
             function(error) {
               throw new Error(error);
@@ -91,5 +97,14 @@ var CSSDeviceManager = {
   update: function(cssDevice, cssDeviceElement) {
     var style = window.getComputedStyle(cssDeviceElement, null);
     cssDevice.update(style);
+  },
+
+  listen: function(value, cssDevice) {
+    var selector = "[data-device-number=\""+cssDevice.deviceNumber+"\"]";
+    var cssDeviceElement = document.querySelector(selector);
+    cssDeviceElement.value = value;
+    var event = document.createEvent("HTMLEvents");
+    event.initEvent("change", true, false);
+    cssDeviceElement.dispatchEvent(event);
   }
 }
