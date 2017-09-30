@@ -34,19 +34,23 @@ MCP3425.prototype = {
     var port = this.port;
     var address = this.address;
     return new Promise(function(resolve, reject) {
-      var thread = (function*() {
-        port.setDeviceAddress(address);
-        port.write8(0b10001000);
-        yield Utility.sleep(200, thread);
-        Promise.all([
-          port.read8(0x00, true)
-        ]).then(function(v){
-          resolve(v[0]);
-        },function(){
-          reject();
-        });
-      })();
-      thread.next();
+
+      port.open(address).then((slave)=>{
+        var thread = (function*() {
+          //port.setDeviceAddress(address);
+          //port.open(address);
+          slave.write8(0b10001000);
+          yield Utility.sleep(200, thread);
+          Promise.all([
+            slave.read8(0x00, true)
+          ]).then(function(v){
+            resolve(v[0]);
+          },function(){
+            reject();
+          });
+        })();
+        thread.next();
+      });
     });
   }
 }

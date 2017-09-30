@@ -10,7 +10,8 @@ var PortManager = {
       } else {
         navigator.requestI2CAccess().then(
           function(i2c) {
-            var port = i2c.open(portNumber);
+            //var port = i2c.open(portNumber);
+            var port = i2c.ports.get(portNumber);
             self.port_map[portName] = port;
             resolve(port);
           }

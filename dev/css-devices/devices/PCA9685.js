@@ -13,27 +13,33 @@ var PCA9685Manager = {
       } else {
         self.device_map[port] = {};
       }
-      port.setDeviceAddress(address);
-      var thread = (function* (){
-        port.write8(0x00, 0x00);
-        yield Utility.sleep(10, thread);
-        port.write8(0x01, 0x04);
-        yield Utility.sleep(10, thread);
-        port.write8(0x00, 0x10);
-        yield Utility.sleep(10, thread);
-        port.write8(0xfe, 0x64);
-        yield Utility.sleep(10, thread);
-        port.write8(0x00, 0x00);
-        yield Utility.sleep(10, thread);
-        port.write8(0x06, 0x00);
-        yield Utility.sleep(10, thread);
-        port.write8(0x07, 0x00);
-        yield Utility.sleep(300, thread);
-        var device = new PCA9685(port, address);
-        self.device_map[port][address] = device;
-        resolve(device);
-      })();
-      thread.next();
+      port.open(address).then((slave)=>{
+
+
+      //port.setDeviceAddress(address);
+      //port.open(address);
+        var thread = (function* (){
+          yield Utility.sleep(10, thread);
+          slave.write8(0x00, 0x00);
+          yield Utility.sleep(10, thread);
+          slave.write8(0x01, 0x04);
+          yield Utility.sleep(10, thread);
+          slave.write8(0x00, 0x10);
+          yield Utility.sleep(10, thread);
+          slave.write8(0xfe, 0x64);
+          yield Utility.sleep(10, thread);
+          slave.write8(0x00, 0x00);
+          yield Utility.sleep(10, thread);
+          slave.write8(0x06, 0x00);
+          yield Utility.sleep(10, thread);
+          slave.write8(0x07, 0x00);
+          yield Utility.sleep(300, thread);
+          var device = new PCA9685(port, address);
+          self.device_map[port][address] = device;
+          resolve(device);
+        })();
+        thread.next();
+      });
     });
   }
 }
@@ -55,15 +61,19 @@ PCA9685.prototype = {
     var tickH = ((ticks >> 8) & 0x0f);
     var tickL = (ticks & 0xff);
     return new Promise(function(resolve, reject) {
-      var thread = (function*() {
-        port.setDeviceAddress(address);
-        var pwmPort =  Math.round(portStart + pin * portInterval);
-        port.write8(pwmPort + 1, tickH);
-        yield Utility.sleep(1, thread);
-        port.write8(pwmPort, tickL);
-        resolve();
-      })();
-      thread.next();
+      port.open(address).then((slave)=>{
+
+        var thread = (function*() {
+          //port.setDeviceAddress(address);
+          //port.open(address);
+          var pwmPort =  Math.round(portStart + pin * portInterval);
+          slave.write8(pwmPort + 1, tickH);
+          yield Utility.sleep(1, thread);
+          slave.write8(pwmPort, tickL);
+          resolve();
+        })();
+        thread.next();
+      });
     });
   }
 }

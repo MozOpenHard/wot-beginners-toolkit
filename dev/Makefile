@@ -2,7 +2,7 @@
 files = css-devices/CSSDeviceManager.js \
 				css-devices/MultiColorLED.js \
 				css-devices/Servo.js \
-				css-devices/devices/i2c.js \
+				css-devices/devices/webi2c.js \
 				css-devices/devices/PortManager.js \
 				css-devices/devices/Utility.js \
 				css-devices/devices/PCA9685.js
